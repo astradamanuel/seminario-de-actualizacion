@@ -1,0 +1,85 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.calculadora-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    width: 260px;
+}
+
+/* Pantalla */
+#pantalla {
+    width: 100%;
+    height: 50px;
+    font-size: 30px;
+    text-align: right;
+    margin-bottom: 20px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    background: white;
+}
+
+/* Estilo general de botones */
+button {
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+button:active {
+    transform: translateY(3px);
+    box-shadow: none !important;
+}
+
+/* Colores específicos */
+.boton-num {
+    background-color: #4A90E2;
+    color: white;
+    box-shadow: 0px 4px #357ABD;
+}
+
+.boton-op {
+    background-color: #7ED321;
+    color: white;
+    box-shadow: 0px 4px #6BB11B;
+}
+
+.boton-igual {
+    background-color: #F5A623;
+    color: white;
+    box-shadow: 0px 4px #D48E1D;
+}
+
+.vestimenta-boton-borrar {
+    color: white;
+    font-family: arial;
+    font-weight: bold;
+    font-size: 70%;
+    background-color: red;
+    box-shadow: 0px 5px #BB3E22;
+    width: 100%;
+    height: 38px;
+    border-radius: 6px;
+    border-color: #BB3E22;
+    margin-top: 10px;
+}
+
+table {
+    width: 100%;
+    border-spacing: 10px;
+}

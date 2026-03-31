@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora Web</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="calculadora-container">
+        <input type="text" id="pantalla" value="0" disabled>
+
+        <table>
+            <tr>
+                <td><button class="boton-num" onclick="presionar('7')">7</button></td>
+                <td><button class="boton-num" onclick="presionar('8')">8</button></td>
+                <td><button class="boton-num" onclick="presionar('9')">9</button></td>
+                <td><button class="boton-op" onclick="presionar('+')">+</button></td>
+            </tr>
+            <tr>
+                <td><button class="boton-num" onclick="presionar('4')">4</button></td>
+                <td><button class="boton-num" onclick="presionar('5')">5</button></td>
+                <td><button class="boton-num" onclick="presionar('6')">6</button></td>
+                <td><button class="boton-op" onclick="presionar('-')">-</button></td>
+            </tr>
+            <tr>
+                <td><button class="boton-num" onclick="presionar('3')">3</button></td>
+                <td><button class="boton-num" onclick="presionar('2')">2</button></td>
+                <td><button class="boton-num" onclick="presionar('1')">1</button></td>
+                <td><button class="boton-op" onclick="presionar('*')">*</button></td>
+            </tr>
+            <tr>
+                <td><button class="boton-num" onclick="presionar('0')">0</button></td>
+                <td><button class="boton-num" onclick="presionar('.')">.</button></td>
+                <td><button class="boton-igual" onclick="calcular()">=</button></td>
+                <td><button class="boton-op" onclick="presionar('/')">/</button></td>
+            </tr>
+        </table>
+
+        <button class="vestimenta-boton-borrar" onclick="borrar()">Borrar</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
