@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Abstracción de Chat con WebComponents</title>
+</head>
+<body>
+
+    <h2>Chat Interactivo</h2>
+
+    <!-- Instancia del componente -->
+    <chat-window id="miChat"></chat-window>
+
+    <script src="ChatWindow.js"></script>
+    <script>
+        const chat = document.getElementById('miChat');
+
+        // Ejemplo de uso del método de inserción
+        chat.appendMessage(
+            "Hola! ¿Cómo va el desarrollo del proyecto?", 
+            "11:00", 
+            "https://www.w3schools.com/w3images/bandmember.jpg", 
+            false
+        );
+
+        chat.appendMessage(
+            "¡Hola! Todo bien, acabo de terminar el WebComponent.", 
+            "11:01", 
+            "https://www.w3schools.com/w3images/avatar_g2.jpg", 
+            true
+        );
+
+        chat.appendMessage(
+            "Excelente, ahora probemos el método de inserción.", 
+            "11:02", 
+            "https://www.w3schools.com/w3images/bandmember.jpg", 
+            false
+        );
+    </script>
+
+</body>
+</html>
