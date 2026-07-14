@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Ejercicio 7 - Extensión de Componente</title>
+    <!-- Agregamos defer a ambos para asegurar el orden correcto de carga y ejecución -->
+    <script src="../ejercicio-6/ClimaMDP.js" defer></script>
+    <script src="ClimaExtendido.js" defer></script>
 </head>
 <body>
 
     <h1>Clima MDP con Conversor de Unidades</h1>
 
+    <!-- El punto de entrada de tu componente extendido -->
     <clima-extendido></clima-extendido>
-
-    <script src="../ejercicio-6/ClimaMDP.js"></script>
-
-    <script src="ClimaExtendido.js"></script>
 
 </body>
 </html>

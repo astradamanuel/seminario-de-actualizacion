@@ -7,6 +7,7 @@ class ClimaMDP extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
+    
     this.datos = {
       meses: ["Ene.", "Feb.", "Mar.", "Abr.", "May.", "Jun.", "Jul.", "Ago.", "Sep.", "Oct.", "Nov.", "Dic.", "Anual"],
       filas: [
@@ -21,58 +22,108 @@ class ClimaMDP extends HTMLElement {
         { label: "Humedad relativa (%)", data: [76, 77, 79, 81, 83, 84, 81, 81, 80, 80, 77, 76, 80], class: "humedad" }
       ]
     };
+
+    // Construcción del DOM de forma 100% programática tradicional
+    this.construirDOM();
   }
 
   connectedCallback() {
-    this.render();
+    // connectCallback vacío de renderizado según corrección del ejercicio anterior.
+    // Solo se usaría si tuviéramos que conectar eventos de clicks o interactividad en la tabla.
   }
 
   getPromediosTemperaturas() {
-    return this.datos.filas
-      .filter(f => f.label.includes("Temp"))
-      .map(f => {
-        const soloMeses = f.data.slice(0, 12);
-        const suma = soloMeses.reduce((a, b) => a + b, 0);
-        return parseFloat((suma / 12).toFixed(2));
-      });
+    let promedios = [];
+
+    for (let i = 0; i < this.datos.filas.length; i++) {
+      let fila = this.datos.filas[i];
+
+      // Verificamos si la fila corresponde a una temperatura de forma tradicional
+      if (fila.label.indexOf("Temp") !== -1) {
+        let suma = 0;
+        
+        // Sumamos solo los 12 meses (excluyendo el valor anual que está en la posición 12)
+        for (let j = 0; j < 12; j++) {
+          suma += fila.data[j];
+        }
+
+        let promedio = parseFloat((suma / 12).toFixed(2));
+        promedios.push(promedio);
+      }
+    }
+
+    return promedios;
   }
 
-  render() {
-    this.shadowRoot.innerHTML = `
-      <style>
-        table { border-collapse: collapse; font-family: sans-serif; font-size: 12px; width: 100%; text-align: center; }
-        th, td { border: 1px solid #aaa; padding: 4px; }
-        .header-clima { background: #f8f9fa; font-weight: bold; }
-        .label-row { font-weight: bold; color: #0645ad; text-align: left; padding-left: 10px; }
-        .temp-max-abs { background-color: #d73027; color: white; }
-        .temp-max-med { background-color: #f46d43; }
-        .temp-med { background-color: #fdae61; }
-        .temp-min-med { background-color: #fee090; }
-        .temp-min-abs { background-color: #e0f3f8; }
-        .precip { background-color: #74add1; color: white; }
-        .dias-precip { background-color: #abd9e9; }
-        .horas-sol { background-color: #ffffbf; }
-        .humedad { background-color: #4575b4; color: white; }
-      </style>
-      <table>
-        <tr class="header-clima">
-          <th>Mes</th>
-          ${this.datos.meses.map(m => `<th>${m}</th>`).join('')}
-        </tr>
-        ${this.datos.filas.map(f => this.generateRow(f.label, f.data, f.class)).join('')}
-      </table>
-    `;
-  }
+  construirDOM() {
+    // 1. Crear elemento de estilos e inyectar las reglas CSS
+    let estilo = document.createElement("style");
+    estilo.textContent = 
+      "table { border-collapse: collapse; font-family: sans-serif; font-size: 12px; width: 100%; text-align: center; }" +
+      "th, td { border: 1px solid #aaa; padding: 4px; }" +
+      ".header-clima { background: #f8f9fa; font-weight: bold; }" +
+      ".label-row { font-weight: bold; color: #0645ad; text-align: left; padding-left: 10px; }" +
+      ".temp-max-abs { background-color: #d73027; color: white; }" +
+      ".temp-max-med { background-color: #f46d43; }" +
+      ".temp-med { background-color: #fdae61; }" +
+      ".temp-min-med { background-color: #fee090; }" +
+      ".temp-min-abs { background-color: #e0f3f8; }" +
+      ".precip { background-color: #74add1; color: white; }" +
+      ".dias-precip { background-color: #abd9e9; }" +
+      ".horas-sol { background-color: #ffffbf; }" +
+      ".humedad { background-color: #4575b4; color: white; }";
+    
+    this.shadowRoot.appendChild(estilo);
 
-  generateRow(label, data, className) {
-    return `
-      <tr>
-        <td class="label-row">${label}</td>
-        ${data.map((val, index) => `
-          <td class="${index === 12 ? 'header-clima' : className}">${val}</td>
-        `).join('')}
-      </tr>
-    `;
+    // 2. Crear tabla principal
+    let tabla = document.createElement("table");
+
+    // 3. Crear fila de encabezado (Meses)
+    let filaEncabezado = document.createElement("tr");
+    filaEncabezado.className = "header-clima";
+
+    let thMes = document.createElement("th");
+    thMes.innerText = "Mes";
+    filaEncabezado.appendChild(thMes);
+
+    for (let i = 0; i < this.datos.meses.length; i++) {
+      let th = document.createElement("th");
+      th.innerText = this.datos.meses[i];
+      filaEncabezado.appendChild(th);
+    }
+    tabla.appendChild(filaEncabezado);
+
+    // 4. Crear filas de datos de forma dinámica e imperativa
+    for (let i = 0; i < this.datos.filas.length; i++) {
+      let filaDatos = this.datos.filas[i];
+      let tr = document.createElement("tr");
+
+      // Columna de etiqueta (Nombre de la fila)
+      let tdLabel = document.createElement("td");
+      tdLabel.className = "label-row";
+      tdLabel.innerText = filaDatos.label;
+      tr.appendChild(tdLabel);
+
+      // Columnas con los valores de los meses
+      for (let j = 0; j < filaDatos.data.length; j++) {
+        let tdVal = document.createElement("td");
+        tdVal.innerText = filaDatos.data[j];
+
+        // Aplicamos clase especial 'header-clima' a la columna 'Anual' (índice 12)
+        if (j === 12) {
+          tdVal.className = "header-clima";
+        } else {
+          tdVal.className = filaDatos.class;
+        }
+
+        tr.appendChild(tdVal);
+      }
+
+      tabla.appendChild(tr);
+    }
+
+    // 5. Acoplar la tabla completa al Shadow DOM
+    this.shadowRoot.appendChild(tabla);
   }
 }
 

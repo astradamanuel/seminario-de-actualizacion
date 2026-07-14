@@ -7,114 +7,151 @@ instantánteamente las modificaciones visuales.*/
 class EqualizadorGrafico extends HTMLElement {
     constructor() {
         super();
-        // Datos basados en la imagen (frecuencias exactas)
+
         this.data = {
-            "32Hz": 0, "64Hz": 0, "130Hz": 0, "260Hz": 0, "500Hz": 0,
-            "1k": 0, "2k": 0, "4k": 0, "8.3k": 0, "16.5k": 0
+            "32Hz": 0,
+            "64Hz": 0,
+            "130Hz": 0,
+            "260Hz": 0,
+            "500Hz": 0,
+            "1k": 0,
+            "2k": 0,
+            "4k": 0,
+            "8.3k": 0,
+            "16.5k": 0
         };
+
         this.sliders = [];
+
+        // Enlazamos el contexto de manera tradicional
         this.manejarCambioSlider = this.manejarCambioSlider.bind(this);
+
+        // Panel principal
+        this.panel = document.createElement("div");
+        this.panel.style.cssText =
+            "display:flex;" +
+            "background:#c0c0c0;" +
+            "padding:15px;" +
+            "border:2px solid;" +
+            "border-color:white black black white;" +
+            "font-family:sans-serif;" +
+            "width:fit-content;";
+
+        // Contenedor de sliders
+        this.slidersContainer = document.createElement("div");
+        this.slidersContainer.style.display = "flex";
+        this.slidersContainer.style.gap = "5px";
+
+        for (let frecuencia in this.data) {
+
+            let columna = document.createElement("div");
+            columna.style.display = "flex";
+            columna.style.flexDirection = "column";
+            columna.style.alignItems = "center";
+            columna.style.border = "1px solid gray";
+            columna.style.padding = "5px";
+
+            let lblFrecuencia = document.createElement("span");
+            lblFrecuencia.innerText = frecuencia;
+            lblFrecuencia.style.fontSize = "12px";
+
+            let slider = document.createElement("input");
+            slider.type = "range";
+            slider.min = "-10";
+            slider.max = "10";
+            slider.value = this.data[frecuencia];
+            slider.dataset.freq = frecuencia;
+            slider.style.cssText =
+                "writing-mode:bt-lr;" +
+                "-webkit-appearance:slider-vertical;" +
+                "height:120px;" +
+                "width:20px;";
+
+            let lblValor = document.createElement("span");
+            lblValor.innerText = "0dB";
+            lblValor.style.fontSize = "10px";
+
+            columna.appendChild(lblFrecuencia);
+            columna.appendChild(slider);
+            columna.appendChild(lblValor);
+
+            this.slidersContainer.appendChild(columna);
+
+            this.sliders.push(slider);
+        }
+
+        // Botones laterales
+        this.botonesContainer = document.createElement("div");
+        this.botonesContainer.style.display = "flex";
+        this.botonesContainer.style.flexDirection = "column";
+        this.botonesContainer.style.gap = "5px";
+        this.botonesContainer.style.marginLeft = "15px";
+
+        let nombresBotones = ["OK", "Cancel", "Audition", "Help"];
+
+        for (let nombre of nombresBotones) {
+            let boton = document.createElement("button");
+            boton.innerText = nombre;
+            boton.style.width = "80px";
+            this.botonesContainer.appendChild(boton);
+        }
+
+        this.panel.appendChild(this.slidersContainer);
+        this.panel.appendChild(this.botonesContainer);
+
+        this.appendChild(this.panel);
     }
 
     connectedCallback() {
-        this.render();
-        this.conectarEventos();
+        // Conexión directa y explícita de eventos, tal como pidió
+        for (let slider of this.sliders) {
+            slider.addEventListener("input", this.manejarCambioSlider);
+        }
     }
 
     disconnectedCallback() {
-        this.desconectarEventos();
-    }
-
-    conectarEventos() {
-        this.sliders.forEach(input => {
-            input.addEventListener("input", this.manejarCambioSlider);
-        });
-    }
-
-    desconectarEventos() {
-        this.sliders.forEach(input => {
-            input.removeEventListener("input", this.manejarCambioSlider);
-        });
-    }
-
-    render() {
-        this.innerHTML = "";
-        this.sliders = [];
-
-        // Contenedor principal estilo "ventana vieja"
-        const panel = document.createElement("div");
-        panel.style.cssText = `
-            display: flex; background: #c0c0c0; padding: 15px;
-            border: 2px solid; border-color: white black black white;
-            font-family: sans-serif; width: fit-content;
-        `;
-
-        // Contenedor para los sliders
-        const slidersContainer = document.createElement("div");
-        slidersContainer.style.display = "flex";
-        slidersContainer.style.gap = "5px";
-
-        for (let freq in this.data) {
-            const col = document.createElement("div");
-            col.style.cssText = "display: flex; flex-direction: column; align-items: center; border: 1px solid gray; padding: 5px;";
-
-            const labelTop = document.createElement("span");
-            labelTop.innerText = freq;
-            labelTop.style.fontSize = "12px";
-
-            const input = document.createElement("input");
-            input.type = "range";
-            input.min = "-10";
-            input.max = "10";
-            input.value = this.data[freq];
-            input.setAttribute("data-freq", freq);
-            input.style.cssText = "writing-mode: bt-lr; -webkit-appearance: slider-vertical; height: 120px; width: 20px;";
-
-            const labelBottom = document.createElement("span");
-            labelBottom.innerText = `${this.data[freq] > 0 ? '+' : ''}${this.data[freq]}dB`;
-            labelBottom.style.fontSize = "10px";
-
-            col.appendChild(labelTop);
-            col.appendChild(input);
-            col.appendChild(labelBottom);
-            slidersContainer.appendChild(col);
-            this.sliders.push(input);
+        // Desconexión directa
+        for (let slider of this.sliders) {
+            slider.removeEventListener("input", this.manejarCambioSlider);
         }
-
-        // Panel de botones laterales (OK, Cancel, etc.)
-        const botonesContainer = document.createElement("div");
-        botonesContainer.style.cssText = "display: flex; flex-direction: column; gap: 5px; margin-left: 15px;";
-        
-        ["OK", "Cancel", "Audition", "Help"].forEach(texto => {
-            const btn = document.createElement("button");
-            btn.innerText = texto;
-            btn.style.width = "80px";
-            botonesContainer.appendChild(btn);
-        });
-
-        panel.appendChild(slidersContainer);
-        panel.appendChild(botonesContainer);
-        this.appendChild(panel);
     }
 
-    manejarCambioSlider(e) {
-        const freq = e.target.getAttribute("data-freq");
-        const valor = parseInt(e.target.value);
-        this.data[freq] = valor;
-        // Actualiza el texto de los dB que está debajo del input
-        e.target.nextElementSibling.innerText = `${valor > 0 ? '+' : ''}${valor}dB`;
+    manejarCambioSlider(evento) {
+        let slider = evento.target;
+        let frecuencia = slider.dataset.freq;
+        let valor = parseInt(slider.value);
+
+        this.data[frecuencia] = valor;
+
+        slider.nextElementSibling.innerText =
+            (valor > 0 ? "+" : "") + valor + "dB";
     }
 
     getData() {
-        return { ...this.data };
+        // Clonación tradicional para no devolver la referencia directa
+        let copia = {};
+        for (let clave in this.data) {
+            copia[clave] = this.data[clave];
+        }
+        return copia;
     }
 
-    setData(newData) {
-        this.data = newData;
-        if (this.isConnected) {
-            this.desconectarEventos();
-            this.render();
-            this.conectarEventos();
+    setData(nuevoObjeto) {
+        // Copiamos los valores nuevos de forma segura
+        for (let clave in nuevoObjeto) {
+            if (this.data.hasOwnProperty(clave)) {
+                this.data[clave] = parseInt(nuevoObjeto[clave]) || 0;
+            }
+        }
+
+        // Actualizamos la interfaz visual de inmediato
+        for (let slider of this.sliders) {
+            let frecuencia = slider.dataset.freq;
+            let valor = this.data[frecuencia];
+
+            slider.value = valor;
+            slider.nextElementSibling.innerText =
+                (valor > 0 ? "+" : "") + valor + "dB";
         }
     }
 }

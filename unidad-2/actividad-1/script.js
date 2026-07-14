@@ -1,42 +1,43 @@
 // script.js
-import { CalculadoraModelo } from './modelo.js';
-import { CalculadoraVista } from './vista.js'; // Ejecuta el registro del componente
+import { CalculatorModel } from './modelo.js';
+import { CalculatorView } from './vista.js';
 
-class CalculadoraControlador {
-    constructor(modelo, vista) {
-        this.modelo = modelo;
-        this.vista = vista;
-        this.conectarEventos();
+class CalculatorController {
+    constructor(model, view) {
+        this.model = model;
+        this.view = view;
+
+        // Enlazamos de forma tradicional el manejador
+        this.procesarEntrada = this.procesarEntrada.bind(this);
+
+        // Le pasamos el callback a la vista de la forma clásica que pide el profesor
+        this.view.setControladorCallback(this.procesarEntrada);
     }
 
-    conectarEventos() {
-        // El controlador se sienta a escuchar lo que la vista despacha
-        this.vista.addEventListener('accion-calculadora', (evento) => {
-            const botonPresionado = evento.detail.accion;
-            this.procesarAccion(botonPresionado);
-        });
-    }
-
-    procesarAccion(accion) {
-        if (accion === 'Borrar') {
-            this.modelo.limpiar();
-        } else if (accion === '=') {
-            this.modelo.calcular();
+    procesarEntrada(valor) {
+        if (valor === "Borrar") {
+            this.model.borrar();
+        } else if (valor === "=") {
+            this.model.calcular();
         } else {
-            this.modelo.agregarValor(accion);
+            this.model.presionar(valor, this.view.obtenerValorPantalla());
         }
-
-        // Sincronizamos el estado del modelo con lo que ve el usuario
-        const nuevoResultado = this.modelo.getResultado();
-        this.vista.actualizarPantalla(nuevoResultado);
+        
+        // La vista se actualiza siempre reflejando el estado del modelo
+        this.view.actualizarPantalla(this.model.obtenerOperacion());
     }
 }
 
-// ARRANQUE SEGURO: Esperamos a que 'x-calculadora' esté lista en los customElements
-customElements.whenDefined('x-calculadora').then(() => {
-    const modelo = new CalculadoraModelo();
-    const vista = document.querySelector('x-calculadora');
+// Enfoque clásico de arranque de clase: Inicialización limpia al cargar el script
+function inicializarApp() {
+    let modelo = new CalculatorModel();
+    // Buscamos el elemento que ya está declarado estáticamente en el HTML de la página
+    let vista = document.querySelector("x-calculadora");
     
-    // Inyección de dependencias pura
-    const app = new CalculadoraControlador(modelo, vista);
-});
+    if (vista) {
+        let controlador = new CalculatorController(modelo, vista);
+    }
+}
+
+// Ejecución directa de la función de arranque
+inicializarApp();
