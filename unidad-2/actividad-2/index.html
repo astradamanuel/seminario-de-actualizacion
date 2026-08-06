@@ -1,32 +1,88 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en" dir="ltr">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración MVC - Actividad 2</title>
-    
-    <!-- 1. Enlazamiento a los estilos CSS originales (Requisito de la consigna) -->
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-    <style>
-        /* Estilos globales básicos de reseteo para la plantilla */
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #f1f1f1;
-            font-family: "Roboto", sans-serif;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>W3Admin - Sistema RPC</title>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="./assets/icons/font-awesome-4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./assets/css/w3pro-4.13.css">
+  <link rel="stylesheet" href="./assets/css/w3-theme.css">
+  <link rel="stylesheet" href="./assets/css/admin-styles.css">
+  
+  <style>
+    .vista-oculta { display: none !important; }
+    .vista-activa { display: block; }
+    .pantalla-centrada { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f4f5f7; padding: 20px; }
+  </style>
 </head>
-<body>
 
-    <!-- 2. Instanciación limpia de tu WebComponent de la Vista -->
-    <wc-application-view></wc-application-view>
+<body class="w3-light-grey">
 
-    <!-- 3. Carga del script como módulo en el mismo directorio -->
-    <script type="module" src="./wc-application-view.js"></script>
+  <!-- Contenedor VISTA LOGIN -->
+  <div id="vista-login" class="pantalla-centrada vista-activa">
+    <wc-login-form-view id="componente-login"></wc-login-form-view>
+  </div>
 
+  <!-- Contenedor VISTA REGISTRO -->
+  <div id="vista-registro" class="pantalla-centrada vista-oculta">
+    <wc-register-form-view id="componente-registro"></wc-register-form-view>
+  </div>
+
+  <script src="./js/api.js"></script>
+  <script src="./js/WCLoginFormView.js"></script>
+  <script src="./js/WCRegisterFormView.js"></script>
+  <script>
+    function cambiarVista(idVista) {
+        document.getElementById('vista-login').className = "vista-oculta";
+        document.getElementById('vista-registro').className = "vista-oculta";
+        document.getElementById(idVista).className = "pantalla-centrada vista-activa";
+    }
+
+    var compLogin = document.getElementById('componente-login');
+    var compRegistro = document.getElementById('componente-registro');
+
+    compLogin.addEventListener('on-ir-registro', function() {
+        cambiarVista('vista-registro');
+    });
+
+    compRegistro.addEventListener('on-volver-login', function() {
+        cambiarVista('vista-login');
+    });
+
+    compLogin.addEventListener('on-intentar-login', async function(evento) {
+        var user = evento.detail.user;
+        var pass = evento.detail.pass;
+        try {
+            var data = await RPCWebAPIFetch('/loginUser', { username: user, password: pass });
+            alert("Bienvenido " + data.user);
+        } catch(e) {
+            if (e.name === 'RPCWebAPIException') {
+                alert("Error [" + e.exception + "]: " + e.detail.join(", "));
+            } else {
+                alert("Error de conexión: " + e.message);
+            }
+        }
+    });
+
+    compRegistro.addEventListener('on-intentar-registro', async function(evento) {
+        var user = evento.detail.user;
+        var pass = evento.detail.pass;
+        try {
+            await RPCWebAPIFetch('/registerUser', { username: user, password: pass });
+            alert("¡Registro exitoso! Ya puedes iniciar sesión.");
+            cambiarVista('vista-login');
+        } catch(e) {
+            if (e.name === 'RPCWebAPIException') {
+                alert("No se pudo registrar [" + e.exception + "]: " + e.detail.join(", "));
+            } else {
+                alert("Error de conexión: " + e.message);
+            }
+        }
+    });
+  </script>
 </body>
 </html>

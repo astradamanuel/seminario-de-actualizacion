@@ -5,7 +5,7 @@ class WCApplicationView extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
 
-        // Enlazamos de forma tradicional el manejador de eventos (Sin funciones flecha)
+        // Enlazo de forma tradicional el manejador de eventos 
         this.onSearchTriggerClick = this.onSearchTriggerClick.bind(this);
 
         // Inyección de estilos externos (Requerido para W3.css) - Usando bucle clásico para evitar flechas
@@ -119,7 +119,7 @@ class WCApplicationView extends HTMLElement {
         logoDiv.appendChild(h5);
         labelToggle.appendChild(iToggle);
         
-        // Agregamos un icono de lupa al disparador de foco
+        // Agrego un icono de lupa al disparador de foco
         const iSearch = document.createElement("i");
         iSearch.classList.add("fa", "fa-search");
         divSearchInner.appendChild(iSearch);
@@ -231,7 +231,7 @@ class WCApplicationView extends HTMLElement {
         }
     }
 
-    // Registro simétrico de eventos utilizando addEventListener (Como exige el profesor)
+    // Registro simétrico de eventos utilizando addEventListener
     connectedCallback() {
         const searchTrigger = this.shadowRoot.querySelector('#search-trigger');
         if (searchTrigger) {
