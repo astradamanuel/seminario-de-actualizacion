@@ -4,47 +4,88 @@
 // nombre con la mayúscula en la primera letra. Independientemente de cómo sea recibidas las 
 // cadenas de texto.
 
-class RegistroUsuario extends HTMLElement /* Siempre que usás extends, necesitás super() */ {
-    constructor() /* “inicio” del objeto */ { 
-        super(); /* llama al constructor de HTMLElement */
+class RegistroUsuario extends HTMLElement {
+    constructor() {
+        super();
+        
+        // ✅ 1. Crear Shadow DOM
+        this.attachShadow({ mode: 'open' });
+        
+        // ✅ 2. Binding de eventos en el constructor 
+        this.onRegistrarClick = this.onRegistrarClick.bind(this); 
+        
+        // ✅ 3. Construcción de elementos en el constructor 
+        this.inputNombre = this.crearInput("nombre", "Ingrese su nombre");
+        /* Meté el input de nombre dentro del Shadow DOM */
+        this.inputApellido = this.crearInput("apellido", "Ingrese su apellido");
+        this.boton = this.crearBoton();
+        this.resultado = this.crearParrafo();
+        
+        // ✅ 4. Ensamblaje en el shadowRoot
+        this.shadowRoot.appendChild(this.inputNombre);
+        this.shadowRoot.appendChild(document.createElement("br"));
+        this.shadowRoot.appendChild(document.createElement("br"));
+        this.shadowRoot.appendChild(this.inputApellido);
+        this.shadowRoot.appendChild(document.createElement("br"));
+        this.shadowRoot.appendChild(document.createElement("br"));
+        this.shadowRoot.appendChild(this.boton);
+        this.shadowRoot.appendChild(this.resultado);
     }
-
-    /* this = el componente <registro-usuario>, se mete HTML dentro */ 
-
+    
+    // ✅ Métodos de creación separados 
+    crearInput(id, placeholder) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = id;
+        input.placeholder = placeholder;
+        return input;
+    }
+    
+    crearBoton() {
+        const button = document.createElement("button");
+        button.id = "btnRegistrar";
+        button.textContent = "Registrar";
+        return button;
+    }
+    
+    crearParrafo() {
+        const p = document.createElement("p");
+        p.id = "resultado";
+        return p;
+    }
+    
+    // ✅ connectedCallback 
+    /* connectedCallback() se ejecuta cuando el elemento es conectado al DOM 
+    Cuando hagan click en mi botón, ejecutá onRegistrarClick */
     connectedCallback() {
-        this.innerHTML = ` 
-            <input type="text" id="nombre" placeholder="Ingrese su nombre">
-            <br><br>
-            <input type="text" id="apellido" placeholder="Ingrese su apellido">
-            <br><br>
-            <button id="btnRegistrar">Registrar</button>
-            <p id="resultado"></p>
-        `; /* se crea dos inputs, un boton y un parrafo para mostrar resultado */
-
-        this.querySelector("#btnRegistrar") /* Busca dentro del componente el botón */ 
-            .addEventListener("click", () => this.registrar()); /* Ejecuta registrar() */
-            /* () => (arrow function) mantiene el this correcto */
+        this.boton.addEventListener("click", this.onRegistrarClick);
     }
-
-    registrar() { /* Esta función se ejecuta cuando hacés click */ 
-        let nombre = this.querySelector("#nombre").value; /* Va a los inputs y lee lo que escribió el usuario */
-        let apellido = this.querySelector("#apellido").value; /* Va a los inputs y lee lo que escribió el usuario */
-
-        if (nombre === "" || apellido === "") { /* Si alguno está vacío → error */
+    
+    // ✅ disconnectedCallback limpia eventos simétricamente
+    disconnectedCallback() {
+        this.boton.removeEventListener("click", this.onRegistrarClick);
+    }
+    
+    // ✅ Método normal 
+    onRegistrarClick() {
+        let nombre = this.inputNombre.value;
+        let apellido = this.inputApellido.value;
+        
+        // Validación
+        if (nombre === "" || apellido === "") {
             alert("Por favor complete todos los campos");
             return;
         }
-
-        // Formateo
+        
+        // Formateo 
         nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
-        apellido = apellido.toUpperCase(); /* Formateo del nombre y apellido */
-
-        this.querySelector("#resultado").innerText = /* Busca el <p> y le cambia el texto */
-            `¡Buenos días ${apellido}, ${nombre}!`; 
+        apellido = apellido.toUpperCase();
+        
+        // Actualizar resultado
+        this.resultado.textContent = `¡Buenos días ${apellido}, ${nombre}!`;
     }
 }
 
-// Definir el componente
-customElements.define("registro-usuario", RegistroUsuario);
-/* Registrar el componente. Le decís al navegador: “Cuando veas <registro-usuario>, usá esta clase”
-Si esto no está → el componente no existe */
+customElements.define("registro-usuario", RegistroUsuario); /*  Cuando encuentres <registro-usuario>, utilizá la clase RegistroUsuario */
+
+

@@ -8,28 +8,34 @@ class RegistroUsuario extends HTMLElement {
     constructor() {
         super();
 
+        // Crear Shadow DOM
+        this.attachShadow({ mode: 'open' });
         // Contador de intentos
         this.intentos = 0;
+        // ✅ 2. Binding de eventos en el constructor 
+        this.onRegistrarClick = this.onRegistrarClick.bind(this); 
+
+        this.inputFecha = this.crearInput("Fecha de nacimiento xx/xx/xxxx");
+
+
+
     }
 
     connectedCallback() {
-
-        this.innerHTML = `
-            <input type="text" id="fechaNacimiento" placeholder="DD/MM/AAAA">
-
-            <br><br>
-
-            <button id="btnFecha">Validar Fecha</button>
-
-            <p id="resultado"></p>
-        `;
-
-        this.querySelector("#btnFecha")
-            .addEventListener("click", () => this.Fecha());
+        this.boton.addEventListener("click", this.onRegistrarClick);
     }
 
-    Fecha() {
+    disconnectedCallback() {
+        this.boton.removeEventListener("click", this.onRegistrarClick);
+    }
 
+    crearBoton() {
+        const button = document.createElement("button");
+        button.fecha = "Fecha";
+        return button;
+    }
+
+    onRegistrarClick() {
         let fecha = this.querySelector("#fechaNacimiento").value;
 
         // Aumentar intentos
