@@ -124,8 +124,6 @@ class ChatComponent extends HTMLElement {
 
 customElements.define('chat-component', ChatComponent);
 
-// --- LÓGICA EXTERNA (Función main sin flecha) ---
-
 function main() {
     const miChat = document.querySelector('chat-component');
     

@@ -10,14 +10,20 @@ class RegistroUsuario extends HTMLElement {
 
         // Crear Shadow DOM
         this.attachShadow({ mode: 'open' });
-        // Contador de intentos
-        this.intentos = 0;
-        // ✅ 2. Binding de eventos en el constructor 
+        // Binding de eventos en el constructor 
         this.onRegistrarClick = this.onRegistrarClick.bind(this); 
 
-        this.inputFecha = this.crearInput("Fecha de nacimiento xx/xx/xxxx");
+        this.inputFecha = this.crearInput("fechaNacimiento", "Ingrese su fecha de nacimiento (DD/MM/AAAA)");
+        this.boton = this.crearBoton();
+        this.resultado = this.crearParrafo();
 
+        this.shadowRoot.appendChild(this.inputFecha);
+        this.shadowRoot.appendChild(document.createElement("br"));
+        this.shadowRoot.appendChild(document.createElement("br"));
+        this.shadowRoot.appendChild(this.boton);
+        this.shadowRoot.appendChild(this.resultado);
 
+        this.intentos = 0;
 
     }
 
@@ -32,14 +38,26 @@ class RegistroUsuario extends HTMLElement {
     crearBoton() {
         const button = document.createElement("button");
         button.fecha = "Fecha";
+        button.textContent = "Registrar";
         return button;
     }
 
-    onRegistrarClick() {
-        let fecha = this.querySelector("#fechaNacimiento").value;
+    crearInput(id, placeholder) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = id;
+        input.placeholder = placeholder;
+        return input;
+    }
 
-        // Aumentar intentos
-        this.intentos++;
+    crearParrafo() {
+        const p = document.createElement("p");
+        p.id = "resultado";
+        return p;
+    }
+
+    onRegistrarClick() {
+        let fecha = this.shadowRoot.querySelector("#fechaNacimiento").value;
 
         // Separar día, mes y año
         let partes = fecha.split("/");
@@ -47,8 +65,14 @@ class RegistroUsuario extends HTMLElement {
         // Verificar formato
         if (partes.length !== 3) {
 
-            this.querySelector("#resultado").innerText =
+            // Aumentar intentos
+            this.intentos++;
+
+            this.shadowRoot.querySelector("#resultado").innerText =
                 `Fecha inválida. Reintento número ${this.intentos}`;
+
+            this.inputFecha.value = "";
+            this.inputFecha.focus();
 
             return;
         }
@@ -67,13 +91,18 @@ class RegistroUsuario extends HTMLElement {
             fechaValida.getDate() === dia
         ) {
 
-            this.querySelector("#resultado").innerText =
+            this.shadowRoot.querySelector("#resultado").innerText =
                 "Fecha válida";
 
         } else {
 
-            this.querySelector("#resultado").innerText =
+            // Aumentar intentos
+            this.intentos++;
+            this.shadowRoot.querySelector("#resultado").innerText =
                 `Fecha inválida. Reintento número ${this.intentos}`;
+
+            this.inputFecha.value = "";
+            this.inputFecha.focus();
         }
     }
 }

@@ -1,12 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="utf-8" />
-    <title>Ejercicio 1 - Cruz Diagonal</title>
-    <meta name="generator" content="Geany 2.0" />
+    <title>Ejercicios Unidad 4</title>
+    <script src="MVCCanvas.js"></script>
+    <script src="ejercicio-6.js"></script>
+    <script src="ejercicio-12.js"></script>
+
 </head>
+
 <body>
+    <p> prompt circulo: {"tipo": "circulo", "x": 150, "y": 150, "radio": 50} </p>
+    <p> prompt triangulo: {"tipo": "poligono", "puntos": [{"x": 200, "y": 50}, {"x": 280, "y": 180}, {"x": 120, "y": 180}]}</p>
 </body>
 
-<script type="module" src="ejercicio-6.js"></script>
+<script>
+function main() {
+    // Título principal
+    let h1 = document.createElement('h1');
+    h1.innerText = 'Pantalla de Inicio';
+    document.body.appendChild(h1);
+
+    // Botón del Ejercicio 6
+    let btnEj6 = document.createElement('button');
+    btnEj6.innerText = 'Ejercicio 6';
+    btnEj6.style.padding = '10px 15px';
+    btnEj6.style.fontWeight = 'bold';
+    btnEj6.style.cursor = 'pointer';
+
+    btnEj6.onclick = () => {
+        iniciarEjercicio6();
+    };
+
+    // Botón del Ejercicio 12
+    let btnEj12 = document.createElement('button');
+    btnEj12.innerText = 'Ejercicio 12';
+    btnEj12.style.padding = '10px 15px';
+    btnEj12.style.fontWeight = 'bold';
+    btnEj12.style.cursor = 'pointer';
+
+    btnEj12.onclick = () => {
+        iniciarEjercicio12();
+    };
+
+    document.body.appendChild(btnEj6);
+    document.body.appendChild(btnEj12);
+    document.body.appendChild(document.createElement('hr'));
+}
+
+window.onload = main;
+</script>
+
 </html>
+
+

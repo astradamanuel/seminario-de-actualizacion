@@ -25,10 +25,10 @@ class ClimaMDP extends HTMLElement {
 
     // Construcción del DOM de forma 100% programática tradicional
     this.construirDOM();
+
   }
 
   connectedCallback() {
-    // connectCallback vacío de renderizado según corrección del ejercicio anterior.
     // Solo se usaría si tuviéramos que conectar eventos de clicks o interactividad en la tabla.
   }
 

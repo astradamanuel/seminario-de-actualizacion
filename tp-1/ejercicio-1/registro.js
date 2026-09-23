@@ -16,7 +16,7 @@ class RegistroUsuario extends HTMLElement {
         
         // ✅ 3. Construcción de elementos en el constructor 
         this.inputNombre = this.crearInput("nombre", "Ingrese su nombre");
-        /* Meté el input de nombre dentro del Shadow DOM */
+        /* Mete el input de nombre dentro del Shadow DOM */
         this.inputApellido = this.crearInput("apellido", "Ingrese su apellido");
         this.boton = this.crearBoton();
         this.resultado = this.crearParrafo();
