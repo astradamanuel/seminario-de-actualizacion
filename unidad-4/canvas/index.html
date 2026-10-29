@@ -7,12 +7,15 @@
     <script src="MVCCanvas.js"></script>
     <script src="ejercicio-6.js"></script>
     <script src="ejercicio-12.js"></script>
-
+    <script src="ejercicio-19.js"></script>
+    <script src="ejercicio-26.js"></script>
+    <script src="ejercicio-32.js"></script>
 </head>
 
 <body>
     <p> prompt circulo: {"tipo": "circulo", "x": 150, "y": 150, "radio": 50} </p>
     <p> prompt triangulo: {"tipo": "poligono", "puntos": [{"x": 200, "y": 50}, {"x": 280, "y": 180}, {"x": 120, "y": 180}]}</p>
+    <p> prompt Grafico torta {"tipo": "cakeGraph", "x": 400, "y": 300, "radio": 120, "valores": [35, 25, 40]} </p>
 </body>
 
 <script>
@@ -44,8 +47,46 @@ function main() {
         iniciarEjercicio12();
     };
 
+    // Boton del Ejercicio 19
+    let btnEj19 = document.createElement('button');
+    btnEj19.innerText = 'Ejercicio 19';
+    btnEj19.style.padding = '10px 15px';
+    btnEj19.style.fontWeight = 'bold';
+    btnEj19.style.cursor = 'pointer';
+
+    btnEj19.onclick = () => {
+        iniciarEjercicio19();
+    }
+
+    // Botón del Ejercicio 26
+    let btnEj26 = document.createElement('button');
+    btnEj26.innerText = 'Ejercicio 26';
+    btnEj26.style.padding = '10px 15px';
+    btnEj26.style.fontWeight = 'bold';
+    btnEj26.style.cursor = 'pointer';
+
+    btnEj26.onclick = () => {
+        iniciarEjercicio26();
+    };
+
+    // Botón del Ejercicio 32
+    let btnEj32 = document.createElement('button');
+    btnEj32.innerText = 'Ejercicio 32';
+    btnEj32.style.padding = '10px 15px';
+    btnEj32.style.fontWeight = 'bold';
+    btnEj32.style.cursor = 'pointer';
+
+    btnEj32.onclick = () => {
+        iniciarEjercicio32();
+    };
+
+
+
     document.body.appendChild(btnEj6);
     document.body.appendChild(btnEj12);
+    document.body.appendChild(btnEj19);
+    document.body.appendChild(btnEj26);
+    document.body.appendChild(btnEj32);
     document.body.appendChild(document.createElement('hr'));
 }
 
